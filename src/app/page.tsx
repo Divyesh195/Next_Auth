@@ -1,19 +1,28 @@
-"use client";
+"use server"
 
-import { signIn, signOut, useSession } from "next-auth/react";
 
-export default function Home() {
-  // const {data : session} = useSession()
+import { auth } from "../../auth";
+import { SingInButton, SingOutButton } from "./component/authButtons";
+
+export default async function Home() {
+
+  const session = await auth();
+  console.log(session)
+  if(session?.user){
+    return (
+      <div>
+        <p>You are logged in as : {session.user.name}</p>
+        <p>Your Email : {session.user.email}</p>
+        <SingOutButton />
+      </div>
+    )
+  }
   return (
-    <div className="flex flex-col items-center gap-2 mt-3">
-      <p className="text-center">NEXT Auth Project</p>
-
-      <button
-        onClick={() => signIn("google")}
-        className="p-2 bg-blue-600 text-white w-fit rounded-sm cursor-pointer"
-      >
-        Sign in with Google
-      </button>
+    <div>
+      
+      Next Auth
+      <p>You are not Singed In</p>
+     <SingInButton />
     </div>
   );
 }
